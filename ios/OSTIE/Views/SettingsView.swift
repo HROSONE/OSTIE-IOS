@@ -16,7 +16,7 @@ struct SettingsView: View {
                 }
                 Section("Chaves de API") {
                     ForEach(Provider.allCases) { provider in KeyEntry(provider: provider) }
-                    Text("As chaves ficam no chaveiro deste iPhone. As solicitações vão diretamente ao provedor escolhido.").font(.caption)
+                    Text("As chaves ficam no chaveiro deste iPhone. Mensagens e memória contextual vão ao provedor escolhido. Áudio, imagens e anexos vão ao Gemini quando você usa esses recursos. Contatos e agenda consultados pelo agente podem integrar a resposta da ferramenta.").font(.caption)
                 }
                 Section("Modelo de texto") {
                     Picker("Provedor", selection: $model.settings.provider) { ForEach(Provider.allCases) { Text($0.rawValue).tag($0) } }

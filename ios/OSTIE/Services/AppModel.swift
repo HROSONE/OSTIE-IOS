@@ -56,7 +56,7 @@ final class AppModel: ObservableObject {
         live.runTool = { [weak self] name, args in await self?.runTool(name, args) ?? ["error": "App indisponível."] }
         camera.onFrame = { [weak self] data in Task { @MainActor in self?.live.sendFrame(data) } }
         camera.onError = { [weak self] message in Task { @MainActor in self?.report(message) } }
-        live.$active.dropFirst().sink { [weak self] active in if !active { self?.camera.stop(); self?.stopScreen() } }.store(in: &cancellables)
+        live.$active.dropFirst().sink { [weak self] active in if !active { self?.camera.stop(); self?.stopScreen(); self?.chooseWriter("cancel") } }.store(in: &cancellables)
         scheduler.onOpen = { [weak self] id in self?.tab = 3; self?.runRoutine(id) }
         importInbox()
     }

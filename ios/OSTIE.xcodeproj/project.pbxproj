@@ -678,7 +678,7 @@
 			"buildActionMask" = 2147483647;
 			"files" = ();
 			"inputPaths" = ("$(SRCROOT)/../scripts/prepare_assets.swift", "$(SRCROOT)/OSTIE/Assets.xcassets/Orb.imageset/orb.png");
-			"outputPaths" = ("$(SRCROOT)/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png");
+			"outputPaths" = ("$(SRCROOT)/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png", "$(DERIVED_FILE_DIR)");
 			"runOnlyForDeploymentPostprocessing" = 0;
 			"name" = "Prepare original OSTIE app icon";
 			"shellPath" = "/bin/sh";
