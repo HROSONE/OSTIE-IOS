@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_description">Permite ao OSTIE ler os controles visíveis e tocar ou digitar em outros apps quando você pedir por voz. Você pode desativar em Acessibilidade.</string>
+    <string name="shortcut_live">Conversa Live</string>
+    <string name="shortcut_live_long">Falar com o OSTIE</string>
+    <string name="shortcut_writing">Aba de Escrita</string>
+    <string name="notification_listener_label">OSTIE · leitura de notificações</string>
+</resources>

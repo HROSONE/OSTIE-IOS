@@ -1,0 +1,9 @@
+.DS_Store
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.ipa
+*.p12
+*.mobileprovision
+.env*

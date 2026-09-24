@@ -1,0 +1,117 @@
+name: Android
+# Economia de minutos (repositório privado): uma execução por mudança, sem rodar para documentação.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
+concurrency:
+  group: android-${{ github.ref }}
+  # Em PR, um push novo cancela a execução anterior; na main nunca, para não cortar uma publicação.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Numerar versão
+        # Número sempre crescente para o Android aceitar a atualização por cima.
+        run: |
+          echo "OSTIE_VERSION_CODE=$((100 + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
+          echo "OSTIE_VERSION_NAME=0.15.$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+      - name: Instalar SDK 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Testar
+        run: gradle :app:testDebugUnitTest --no-daemon
+      - name: Compilar APK de teste (PR)
+        if: github.event_name == 'pull_request'
+        run: gradle :app:assembleDebug --no-daemon
+      - name: Compilar APK com assinatura permanente
+        if: github.event_name != 'pull_request'
+        env:
+          OSTIE_SIGNING_KEYSTORE_BASE64: ${{ secrets.OSTIE_SIGNING_KEYSTORE_BASE64 }}
+          OSTIE_SIGNING_PASSWORD: ${{ secrets.OSTIE_SIGNING_PASSWORD }}
+          OSTIE_SIGNING_ALIAS: ${{ secrets.OSTIE_SIGNING_ALIAS }}
+        run: |
+          if [ -z "$OSTIE_SIGNING_KEYSTORE_BASE64" ] || [ -z "$OSTIE_SIGNING_PASSWORD" ] || [ -z "$OSTIE_SIGNING_ALIAS" ]; then
+            echo 'Assinatura permanente não configurada; consulte docs/ATUALIZACOES.md.'
+            exit 0
+          fi
+          export OSTIE_SIGNING_KEYSTORE_FILE="$RUNNER_TEMP/ostie.jks"
+          trap 'rm -f "$OSTIE_SIGNING_KEYSTORE_FILE"' EXIT
+          printf '%s' "$OSTIE_SIGNING_KEYSTORE_BASE64" | base64 --decode > "$OSTIE_SIGNING_KEYSTORE_FILE"
+          chmod 600 "$OSTIE_SIGNING_KEYSTORE_FILE"
+          gradle :app:assembleRelease --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: ostie-release-assinado
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: ostie-debug-assinatura-temporaria
+          path: app/build/outputs/apk/debug/*.apk
+      - name: Publicar atualização no canal oficial
+        # Só a main (ou execução manual) vira atualização para os aparelhos.
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.OSTIE_RELEASES_TOKEN }}
+          RELEASES_REPO: ${{ vars.OSTIE_RELEASES_REPO }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo 'OSTIE_RELEASES_TOKEN não configurado; atualização não publicada. Veja docs/ATUALIZACOES.md.'
+            exit 0
+          fi
+          # Nome atual do repositório de releases: o GitHub resolve renomeações do repositório e do dono.
+          # (Em erro, o gh api escreve a resposta na saída padrão: só aceita o nome se o comando der certo.)
+          if [ -z "$RELEASES_REPO" ]; then
+            for NAME in OSTIE-AI-releases OSONE-AI-releases; do
+              if FOUND=$(gh api "repos/${{ github.repository_owner }}/$NAME" --jq .full_name 2>/dev/null); then
+                RELEASES_REPO="$FOUND"; break
+              fi
+            done
+          fi
+          if ! [[ "$RELEASES_REPO" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+            echo "Repositório de releases não encontrado ou inválido: '$RELEASES_REPO'"
+            exit 1
+          fi
+          echo "Publicando em $RELEASES_REPO"
+          APK=$(ls app/build/outputs/apk/release/*.apk 2>/dev/null | head -n 1)
+          if [ -z "$APK" ]; then
+            echo 'Sem APK com assinatura permanente; nada a publicar.'
+            exit 0
+          fi
+          FILE="ostie-$OSTIE_VERSION_CODE.apk"
+          cp "$APK" "$FILE"
+          # Repositório compartilhado com o OSONE desktop: tudo do OSTIE sai como pré-lançamento com
+          # prefixo próprio e nunca como "latest", para não confundir o atualizador do desktop.
+          TAG="ostie-v$OSTIE_VERSION_NAME"
+          NOTES=$(git log -1 --pretty=%s | cut -c1-300)
+          jq -n --argjson code "$OSTIE_VERSION_CODE" --arg name "$OSTIE_VERSION_NAME" \
+            --arg url "https://github.com/$RELEASES_REPO/releases/download/$TAG/$FILE" \
+            --arg sha "$(sha256sum "$FILE" | cut -d' ' -f1)" --arg notes "$NOTES" \
+            '{versionCode: $code, versionName: $name, apkUrl: $url, sha256: $sha, notes: $notes}' > latest.json
+          cat latest.json
+          gh release create "$TAG" "$FILE" latest.json --repo "$RELEASES_REPO" \
+            --title "OSTIE $OSTIE_VERSION_NAME (Android)" --notes "$NOTES" --prerelease --latest=false
+          # Canal fixo lido pelo app: releases/download/ostie-latest/latest.json
+          if ! gh release view ostie-latest --repo "$RELEASES_REPO" > /dev/null 2>&1; then
+            gh release create ostie-latest --repo "$RELEASES_REPO" --prerelease --latest=false \
+              --title "OSTIE · canal de atualização automática" \
+              --notes "Usado pelo app OSTIE para procurar versões novas. Não é um instalador do OSONE desktop."
+          fi
+          gh release upload ostie-latest latest.json --repo "$RELEASES_REPO" --clobber

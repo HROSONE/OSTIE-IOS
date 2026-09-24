@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="live" android:enabled="true"
+        android:icon="@drawable/ic_ostie_shortcut"
+        android:shortcutShortLabel="@string/shortcut_live" android:shortcutLongLabel="@string/shortcut_live_long">
+        <intent android:action="com.osone.app.action.LIVE"
+            android:targetPackage="com.osone.app" android:targetClass="com.osone.app.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="writing" android:enabled="true"
+        android:icon="@drawable/ic_ostie_shortcut"
+        android:shortcutShortLabel="@string/shortcut_writing" android:shortcutLongLabel="@string/shortcut_writing">
+        <intent android:action="com.osone.app.action.WRITING"
+            android:targetPackage="com.osone.app" android:targetClass="com.osone.app.MainActivity" />
+    </shortcut>
+</shortcuts>

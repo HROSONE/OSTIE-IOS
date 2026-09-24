@@ -1,0 +1,468 @@
+{
+  "repository": "HROSONE/OSONE-APP",
+  "commit": "7f279da4bc8623708855c50b8e913ea6d439fc0d",
+  "files": [
+    {
+      "path": ".claude/skills/aprimorar/SKILL.md",
+      "sha": "0ace4a08bea0c099dcd35b916d4dc7b00631823f",
+      "size": 5761,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/android.yml",
+      "sha": "2e0ff9cb09d608d023f71c85e589ffad8f07d967",
+      "size": 5898,
+      "mode": "100644"
+    },
+    {
+      "path": ".gitignore",
+      "sha": "44872f57cf9284302168b782848b9926647aa10f",
+      "size": 95,
+      "mode": "100644"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha": "9cd7097ccfe009477e5a5011be80e64c59e98837",
+      "size": 3606,
+      "mode": "100644"
+    },
+    {
+      "path": "README.md",
+      "sha": "51f1829cd85ef6f3ab0db290c19f55d991b7c580",
+      "size": 17777,
+      "mode": "100644"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "sha": "712648289c5bbc90400d0be10b894be8a7796b53",
+      "size": 3462,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sha": "8556dba055b8e0279ac75f0db49d73ef1cd41c8c",
+      "size": 6790,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/AgentTools.kt",
+      "sha": "4b06786fe71a81c65273cb99ad1048f0e14e05cf",
+      "size": 8413,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/AndroidLocalTools.kt",
+      "sha": "ef4bde2da42996a78c5c8af128109cc452e4160b",
+      "size": 17952,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/AppDiagnostics.kt",
+      "sha": "45e15f979509400ab0cd899725ceae0fb368d677",
+      "size": 3990,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/AppUpdater.kt",
+      "sha": "005c1ce0855ca21caa7932b722a50c97ef82386a",
+      "size": 16342,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/AttachmentClient.kt",
+      "sha": "c14ef8e338220e31b8b1a67c72974189a45475cb",
+      "size": 9235,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ChatCompletionClient.kt",
+      "sha": "a67d0776508c68c9ee326104fe07054ee6e9e797",
+      "size": 3727,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ChatModels.kt",
+      "sha": "848f84b39494a6ec5c279d3e8125b42d679e8d5c",
+      "size": 1840,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ChatScreen.kt",
+      "sha": "6049205cc09d242c988065390a7f655ea6cf4e7e",
+      "size": 12470,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ChatVoice.kt",
+      "sha": "c1515a99e72e875c0510830c8a02b2315cc9d210",
+      "size": 8892,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/CodeAuthor.kt",
+      "sha": "4321990df1cde20ed3d42ddfa8fcc414267db563",
+      "size": 8186,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ConversationStore.kt",
+      "sha": "f37f6c837e65a53202ec7825f819383f59d47d3c",
+      "size": 1327,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/DocumentPreview.kt",
+      "sha": "3b9b97a01f09dd8ef4f1551697b91773fd923b4a",
+      "size": 4430,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/EchoCalibration.kt",
+      "sha": "020ff3d17947ec1549d0c4fa8b95d987077cbbc6",
+      "size": 2898,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/GeminiClient.kt",
+      "sha": "720ba7d25c99e8133a4d0401fd75b76e7f62a31a",
+      "size": 8308,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/GroqCatalog.kt",
+      "sha": "9a4e715e4e9dc0c835937bbe69108584436e420c",
+      "size": 1461,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveAudioEngine.kt",
+      "sha": "1e33a24acfb33fe1a5ff47e1444ca8144388a492",
+      "size": 17253,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveCameraController.kt",
+      "sha": "5100ce1681023a836c98d6da14ded29d69239585",
+      "size": 8488,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveCloseReason.kt",
+      "sha": "87e72412b915e84c2861f9446288ccaa5a917bdb",
+      "size": 1737,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveExtras.kt",
+      "sha": "fb94c4914a9cf2fb5c9513a5d2dccbb74150d08c",
+      "size": 4806,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveModels.kt",
+      "sha": "ec4080cdd11b479182ecc2b4afb0ec2b8e9b37ce",
+      "size": 3820,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveScreen.kt",
+      "sha": "1b07420b68322bfa50f9114f3463b5c4eac5a4a8",
+      "size": 23515,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveSessionService.kt",
+      "sha": "ff86f85cfdcf5d7a07acee9c8960a7d38fdb8825",
+      "size": 13735,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/LiveVoiceViewModel.kt",
+      "sha": "bc8cc2d0c0426b86a291d7927d933518fee6f240",
+      "size": 40107,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/MainActivity.kt",
+      "sha": "a37f7571161d57a0aa3c03bbb0f16ee71cae0ee3",
+      "size": 20246,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/MemoryOrganizer.kt",
+      "sha": "f00cccbf757db6ae879a523fc456962af1e7cf0b",
+      "size": 7655,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/MemoryStore.kt",
+      "sha": "cc06c23d2bf394bf69c4dabcfc8c8373387d1767",
+      "size": 11187,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/OsoneAccessibilityService.kt",
+      "sha": "496fe09533d153a4e4f90197acbf8812a782fbec",
+      "size": 8114,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/OsoneViewModel.kt",
+      "sha": "e5c2d973d8817cdb9dca803a42a59b5556a86ed4",
+      "size": 19055,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/OstieIcons.kt",
+      "sha": "d5461fa98d951aba9c51c3c902a5a7f34aca7509",
+      "size": 7894,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/OstieTileService.kt",
+      "sha": "1225ba85a8a7dbc9e4c58fa49033d9087acc31e0",
+      "size": 1170,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/OstieUi.kt",
+      "sha": "6eb9cdf771c50deb451a86b3f66fb17b25bc3781",
+      "size": 15494,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/PhoneActions.kt",
+      "sha": "4d09e487e6b2b98017123701e7324adf21768dfa",
+      "size": 26279,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/Routines.kt",
+      "sha": "74226b22370561217b78d03f315eaaacae2f5480",
+      "size": 15839,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/RoutinesScreen.kt",
+      "sha": "54caf925e6a1324ed6e35679ecd0d1859b47ad55",
+      "size": 8228,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/ScreenCaptureController.kt",
+      "sha": "f690afea3ccdeb29825e48b04f856a9c9473ccd8",
+      "size": 6771,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/SecureKeyStore.kt",
+      "sha": "06db6da711c10ba9f11d7f97fe3fcae7f0d11877",
+      "size": 2237,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/SettingsScreen.kt",
+      "sha": "159f020bc4a82b9cca081f732f3f41bd0af4328a",
+      "size": 16213,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/SpeechText.kt",
+      "sha": "f9afbcd7f680f001af541903eb14c5495197956b",
+      "size": 1988,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/TextModel.kt",
+      "sha": "9b227062e95887c35bc18e1a20ff1c893ba091e4",
+      "size": 5082,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/UpdateWork.kt",
+      "sha": "f9040f6b75c5e9d99e31b06dd159238e5dec866e",
+      "size": 5381,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/UserProfile.kt",
+      "sha": "31b0bcc0ed78a63f6e69c69379bfb3cc95cb9213",
+      "size": 1845,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/WakePhrase.kt",
+      "sha": "d69c35e4dcededf1c8c76cec273a65e2316f786b",
+      "size": 1916,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/WakeWord.kt",
+      "sha": "378c12af462915aa6c12dfeeda1db1a1f07425f5",
+      "size": 13364,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/WritingScreen.kt",
+      "sha": "dcb11fe3168d92e4762e674193e0ab5132d3f5f6",
+      "size": 9072,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/java/com/osone/app/WritingWorkspace.kt",
+      "sha": "b8dbf1f7da510008c04cc149830c588909c0edc1",
+      "size": 3315,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/ostie_orb.png",
+      "sha": "dc5e168dbffaad453cb2459c50d00e6ff91e32ba",
+      "size": 2197492,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_ostie_notification.xml",
+      "sha": "9dd6bf658a07756e4114d9a946992c101c2c387f",
+      "size": 375,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_ostie_shortcut.xml",
+      "sha": "fa97a296d2f2fb574406a12acae07a33edc20a34",
+      "size": 411,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/drawable/ostie_icon_foreground.xml",
+      "sha": "6c2c20a0250cc86213cb5c4d86f88511326ea3db",
+      "size": 261,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha": "d7d98fcc6ffceae103fb990a1c1fa37b38cd4418",
+      "size": 260,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/values/strings.xml",
+      "sha": "2db64cb44ab8a6ec4ae400a32fc5c5d0f0a81e6f",
+      "size": 536,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/xml/osone_accessibility.xml",
+      "sha": "ed297c7539087b02f223d10853467bdfd541d87d",
+      "size": 528,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/xml/shortcuts.xml",
+      "sha": "3d72960df29bef1ae81a98129040e633a29607a9",
+      "size": 942,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/main/res/xml/update_paths.xml",
+      "sha": "d2875752f0ad2076bb751f13251e0402af159787",
+      "size": 171,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/ChatModelsTest.kt",
+      "sha": "fdbfc52010682613acaf66ea04776cdbc5affc9d",
+      "size": 1408,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/DocumentPreviewTest.kt",
+      "sha": "6e0c76eecfc87b39b58e2b577375310206f38a70",
+      "size": 3415,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/EchoCalibrationTest.kt",
+      "sha": "5011376cbbc53a652978a699e8c72c168c37beb4",
+      "size": 2037,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/LiveCloseReasonTest.kt",
+      "sha": "ecca3a839fae31c6497aeaa4654b93981190156e",
+      "size": 2098,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/LiveModelsTest.kt",
+      "sha": "b626958e810b94c6fc9140893f0fb31b2504fcc7",
+      "size": 2765,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/MemoryTidyTest.kt",
+      "sha": "9399697c57af0e7c8b2b452cf4906ba5d9bdb65b",
+      "size": 1856,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/RoutineScheduleTest.kt",
+      "sha": "7afcc25c8276843f09da39cc078b555e63ae4ad2",
+      "size": 1569,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/ScreensTest.kt",
+      "sha": "162f6279b7a4b24aac6f2cad625420c7d8402a9d",
+      "size": 5015,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/SpeechTextTest.kt",
+      "sha": "b49931c2f7290986b5195f04621bbb2ecd819384",
+      "size": 1523,
+      "mode": "100644"
+    },
+    {
+      "path": "app/src/test/java/com/osone/app/WakePhraseTest.kt",
+      "sha": "6854e6ab9f3756d42233aeeca437193607035d8d",
+      "size": 1275,
+      "mode": "100644"
+    },
+    {
+      "path": "build.gradle.kts",
+      "sha": "553a5c018e76008a1e87dd4b676645e11eb3d109",
+      "size": 218,
+      "mode": "100644"
+    },
+    {
+      "path": "docs/ATUALIZACOES.md",
+      "sha": "b17ea3cb45645edd345de1d20039d89ab380a02a",
+      "size": 5274,
+      "mode": "100644"
+    },
+    {
+      "path": "docs/MELHORIAS.md",
+      "sha": "0049b91194b2f99ab1ea9a7d999ca8c8caddf898",
+      "size": 1781,
+      "mode": "100644"
+    },
+    {
+      "path": "docs/PORTABILIDADE.md",
+      "sha": "dba27d7f0d4e0b92377390608b3435d542e22ee5",
+      "size": 2434,
+      "mode": "100644"
+    },
+    {
+      "path": "gradle.properties",
+      "sha": "e6961679fc95d6da9ab1dc56ee2e9d98ecbe6e63",
+      "size": 103,
+      "mode": "100644"
+    },
+    {
+      "path": "settings.gradle.kts",
+      "sha": "e2c319a95824a7cbda801b1ba1f8d1cf8b3342e4",
+      "size": 282,
+      "mode": "100644"
+    }
+  ]
+}

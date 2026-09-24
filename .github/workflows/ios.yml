@@ -1,0 +1,58 @@
+name: iOS build and tests
+on:
+  push:
+    branches: [main]
+    paths: ['ios/**', 'scripts/**', '.github/workflows/ios.yml']
+  pull_request:
+    paths: ['ios/**', 'scripts/**', '.github/workflows/ios.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Android reference and project
+        run: |
+          python3 scripts/verify_reference.py
+          python3 scripts/generate_project.py
+          git diff --exit-code -- ios/OSTIE.xcodeproj ios/OSTIE/Info.plist ios/BroadcastExtension/Info.plist ios/ShareExtension/Info.plist
+      - name: Build iPhone app and extensions without distribution signing
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/OSTIE.xcodeproj -scheme OSTIE -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/device CODE_SIGNING_ALLOWED=NO build | tee device-build.log
+      - name: Choose available iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          devices=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))['devices']
+          choices=[d for runtime,items in devices.items() if 'iOS' in runtime for d in items if d['name'].startswith('iPhone')]
+          if not choices: raise SystemExit('No iPhone simulator installed')
+          with open(os.environ['GITHUB_ENV'],'a') as f: f.write('SIMULATOR_ID='+choices[0]['udid']+'\n')
+          PY
+      - name: Run iOS tests
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/OSTIE.xcodeproj -scheme OSTIE -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath build/simulator -resultBundlePath build/Tests.xcresult CODE_SIGNING_ALLOWED=NO test | tee simulator-test.log
+      - name: Package simulator app
+        run: ditto -c -k --sequesterRsrc --keepParent build/simulator/Build/Products/Debug-iphonesimulator/OSTIE.app build/OSTIE-simulator.zip
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: OSTIE-iOS-simulator
+          path: build/OSTIE-simulator.zip
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iOS-validation
+          path: |
+            device-build.log
+            simulator-test.log
+            build/Tests.xcresult
+          retention-days: 7
