@@ -27,9 +27,19 @@ struct SettingsView: View {
                         if !groqModels.isEmpty { Picker("Modelos disponíveis", selection: $model.settings.groqModel) { ForEach(Array(Set(groqModels + [model.settings.groqModel])).sorted(), id: \.self) { Text($0).tag($0) } } }
                     }
                     if model.settings.provider == .openRouter { TextField("ID do modelo OpenRouter", text: $model.settings.routerModel).autocorrectionDisabled().textInputAutocapitalization(.never) }
-                    Toggle("Fallback de modelos Gemini", isOn: $model.settings.fallback)
+                    Picker("Raciocínio Gemini", selection: $model.settings.thinking) {
+                        Text("Rápido").tag("low"); Text("Equilibrado").tag("medium"); Text("Profundo").tag("high")
+                    }
+                    Toggle("Fallback de modelos", isOn: $model.settings.fallback)
                     Toggle("Pesquisa Google", isOn: $model.settings.googleSearch)
-                    Toggle("Ler respostas com voz do iPhone", isOn: $model.settings.speakChat)
+                    Toggle("Ler respostas em voz alta", isOn: $model.settings.speakChat)
+                    if model.settings.speakChat {
+                        Picker("Voz do chat", selection: $model.settings.ttsModel) {
+                            Text("Gemini Flash-Lite TTS · rápida").tag("gemini-3.8-flash-lite-tts")
+                            Text("Gemini Flash TTS · expressiva").tag("gemini-3.8-flash-tts")
+                            Text("Voz do iPhone").tag("iphone")
+                        }
+                    }
                 }
                 Section("Voz em tempo real") {
                     Picker("Modelo Live", selection: $model.settings.liveModel) { ForEach(Array(Set(liveModels + [model.settings.liveModel])).sorted(), id: \.self) { Text($0).tag($0) } }

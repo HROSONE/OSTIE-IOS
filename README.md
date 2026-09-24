@@ -13,14 +13,14 @@ O aplicativo requer iOS 17+. Uma compilação sem assinatura ou um ZIP de simula
 
 ## Implementação
 
-- Conversa com streaming, histórico local, Gemini/Groq/OpenRouter, ferramentas e fallback Gemini sem repetir resposta parcial ou ferramenta executada.
+- Conversa com streaming, histórico local, Gemini/Groq/OpenRouter, raciocínio selecionável, ferramentas, voz Gemini TTS ou iPhone e fallback Gemini sem repetir resposta parcial ou ferramenta executada.
 - Live com áudio PCM 16 kHz de entrada / 24 kHz de saída, processamento de voz do iOS, interrupção de resposta, reconexões limitadas, retomada de sessão, 30 vozes e consulta de modelos disponíveis na chave.
-- Orbe original reativo, tema escuro/claro, microfone silenciável, legendas opcionais, conversa salva no histórico quando escolhida.
+- Orbe original reativo e ícone gerado da mesma arte durante a compilação, tema escuro/claro, microfone silenciável, legendas opcionais, conversa salva no histórico quando escolhida.
 - Câmera frontal/traseira com imagens limitadas a um quadro por segundo; pausa ao sair do app. Falha da câmera não encerra o Live.
 - ReplayKit Broadcast Extension para mostrar outros apps ao Live com confirmação do sistema, App Group e quadro temporário único; revogação quando o Live termina.
 - Aba de Escrita com edição, Play HTML/SVG, copiar, exportar e apagar com confirmação. Preview sem rede e sem ponte para APIs nativas; conteúdo em iframe isolado. Código pode ser delegado ao modelo de texto enquanto o Live continua.
 - Memória Markdown local, edição/importação/exportação; três chaves no Keychain, sem credenciais nos arquivos ou logs.
-- Anexos multimodais via Gemini (imagens/PDF/texto/áudio/vídeo compatíveis; soma de até 15 MB), extensão Compartilhar para receber arquivos e revisão antes do envio.
+- Anexos multimodais via Gemini (imagens/PDF/texto/áudio/vídeo compatíveis; até 50 MB por arquivo e 100 MB por envio; Office/ZIP têm extração local; arquivos grandes usam Files API com limpeza após a resposta), extensão Compartilhar para receber arquivos e revisão antes do envio.
 - Ações autorizadas: agenda, contatos, mensagens prontas, telefone, mapas, links, alguns apps conhecidos, brilho, lanterna e status do aparelho.
 - Rotinas com notificações locais, dias da semana, ativar/desativar e teste manual. A execução da IA ocorre ao abrir a notificação; o iOS não garante execução arbitrária em segundo plano no horário marcado.
 - Atalho de abertura via Siri/Atalhos e links `ostie://live` / `ostie://writing`.

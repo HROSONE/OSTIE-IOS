@@ -31,6 +31,7 @@ struct RootView: View {
             Button("Modelo de texto") { model.chooseWriter("text") }
             Button("Cancelar", role: .cancel) { model.chooseWriter("cancel") }
         }
+        .onChange(of: model.settings) { _, _ in model.saveSettings() }
         .onChange(of: phase) { _, phase in
             if phase == .background { model.backgrounded() }
             if phase == .active { model.importInbox() }

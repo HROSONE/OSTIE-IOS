@@ -36,6 +36,17 @@ final class OSTIETests: XCTestCase {
         XCTAssertThrowsError(try store.read("chat.json", as: [Message].self))
         XCTAssertEqual(try store.text("chat.json"), "{broken")
     }
+    func testArchiveRejectsTruncatedAndRandomInput() {
+        XCTAssertThrowsError(try ArchiveReader.list(Data()))
+        XCTAssertThrowsError(try ArchiveReader.list(Data(repeating: 0, count: 80)))
+    }
+    @MainActor func testPCMToWAVHasCorrectHeaderAndPayload() {
+        let pcm = Data([0, 0, 255, 127])
+        let wav = ChatSpeaker.wav(pcm)
+        XCTAssertEqual(String(data: wav.prefix(4), encoding: .utf8), "RIFF")
+        XCTAssertEqual(wav.count, 48)
+        XCTAssertEqual(wav.suffix(4), pcm)
+    }
     func testToolRegistryHasNoAndroidControlClaims() {
         let names = ToolRegistry.declarations(search: false).compactMap { $0["name"] as? String }
         XCTAssertEqual(Set(names).count, names.count)

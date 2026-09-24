@@ -32,7 +32,7 @@ final class ShareViewController: UIViewController {
                             do {
                                 if let error { throw error }; guard let url else { continuation.resume(returning: false); return }
                                 let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-                                guard size <= 15_000_000 else { throw NSError(domain: "OSTIE", code: 2) }
+                                guard size <= 50_000_000 else { throw NSError(domain: "OSTIE", code: 2) }
                                 let name = UUID().uuidString + "-" + url.lastPathComponent
                                 try FileManager.default.copyItem(at: url, to: inbox.appendingPathComponent(name)); continuation.resume(returning: true)
                             } catch { continuation.resume(throwing: error) }
@@ -45,7 +45,7 @@ final class ShareViewController: UIViewController {
             let button = UIButton(type: .system); button.setTitle("Concluir", for: .normal)
             button.addTarget(self, action: #selector(done), for: .touchUpInside); button.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(button); NSLayoutConstraint.activate([button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 24), button.centerXAnchor.constraint(equalTo: view.centerXAnchor)])
-        } catch { label.text = "Não foi possível receber o arquivo (limite de 15 MB). Feche esta tela e tente novamente." }
+        } catch { label.text = "Não foi possível receber o arquivo (limite de 50 MB). Feche esta tela e tente novamente." }
     }
     private func load(_ provider: NSItemProvider, type: String) async throws -> NSSecureCoding {
         try await withCheckedThrowingContinuation { continuation in

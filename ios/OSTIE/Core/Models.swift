@@ -13,7 +13,7 @@ enum Provider: String, Codable, CaseIterable, Identifiable {
         switch self { case .gemini: return "gemini-3.8-flash"; case .groq: return "openai/gpt-oss-20b"; case .openRouter: return "openrouter/free" }
     }
 }
-struct Settings: Codable {
+struct Settings: Codable, Equatable {
     var name = ""
     var provider = Provider.gemini
     var geminiModel = "gemini-3.8-flash"
@@ -26,6 +26,8 @@ struct Settings: Codable {
     var darkMode = true
     var saveTranscript = false
     var speakChat = false
+    var thinking = "low"
+    var ttsModel = "gemini-3.8-flash-lite-tts"
     var codeWriter = "ask"
     var model: String {
         switch provider { case .gemini: return geminiModel; case .groq: return groqModel; case .openRouter: return routerModel }

@@ -7,3 +7,5 @@ xcuserdata/
 *.p12
 *.mobileprovision
 .env*
+
+ios/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png

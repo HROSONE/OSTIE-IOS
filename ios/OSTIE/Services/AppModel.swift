@@ -28,7 +28,7 @@ final class AppModel: ObservableObject {
     let files = LocalFiles()
     let textClient = TextClient()
     private let scheduler = RoutineScheduler()
-    private let speech = AVSpeechSynthesizer()
+    private let speech = ChatSpeaker()
     private let calendar = EKEventStore()
     private var chatTask: Task<Void, Never>?
     private var codeTask: Task<Void, Never>?
@@ -47,6 +47,7 @@ final class AppModel: ObservableObject {
             document = try files.text("documento.txt") ?? ""
         } catch { report("Não foi possível ler um arquivo salvo. Os arquivos existentes foram preservados.") }
         live.onError = { [weak self] in self?.report($0) }
+        speech.onError = { [weak self] in self?.report($0) }
         live.onTranscript = { [weak self] user, assistant in
             guard let self, self.settings.saveTranscript else { return }
             if !user.isEmpty { self.messages.append(Message(role: "user", text: user)) }
@@ -102,17 +103,17 @@ final class AppModel: ObservableObject {
                     attachments: selectedAttachments, declarations: ToolRegistry.declarations(search: settings.googleSearch), run: { [weak self] name, args in await self?.runTool(name, args) ?? ["error": "Indisponível"] }) { [weak self] delta in
                         guard let self, let i = self.messages.firstIndex(where: { $0.id == response.id }) else { return }; self.messages[i].text += delta
                     }
-                if settings.speakChat && !live.active { let utterance = AVSpeechUtterance(string: result); utterance.voice = AVSpeechSynthesisVoice(language: "pt-BR"); speech.speak(utterance) }
+                if settings.speakChat && !live.active { speech.speak(result, settings: settings, key: try? keys.read(.gemini)) }
             } catch is CancellationError { }
             catch { report(error.localizedDescription); if let i = messages.firstIndex(where: { $0.id == response.id }), messages[i].text.isEmpty { messages[i].text = "A resposta não pôde ser concluída. \(error.localizedDescription)" } }
         }
     }
-    func cancelChat() { chatTask?.cancel(); speech.stopSpeaking(at: .immediate); resolveApproval(false) }
+    func cancelChat() { chatTask?.cancel(); speech.stop(); resolveApproval(false) }
     func toggleLive() {
         if live.active { live.stop(); camera.stop(); stopScreen(); resolveApproval(false); return }
         do {
             guard let key = try keys.read(.gemini) else { throw AppError.message("Salve sua chave Gemini nos Ajustes.") }
-            speech.stopSpeaking(at: .immediate)
+            speech.stop()
             live.start(settings: settings, key: key, system: system, declarations: ToolRegistry.declarations(search: settings.googleSearch)); tab = 1
         } catch { report(error.localizedDescription) }
     }
@@ -144,11 +145,11 @@ final class AppModel: ObservableObject {
         let accessed = url.startAccessingSecurityScopedResource(); defer { if accessed { url.stopAccessingSecurityScopedResource() } }
         do {
             let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-            guard size <= 15_000_000, attachments.reduce(0, { $0 + $1.data.count }) + size <= 15_000_000 else { throw AppError.message("Os anexos devem somar no máximo 15 MB nesta versão.") }
+            guard size <= 50_000_000, attachments.reduce(0, { $0 + $1.data.count }) + size <= 100_000_000 else { throw AppError.message("Limite de 50 MB por arquivo e 100 MB por envio.") }
             let type = UTType(filenameExtension: url.pathExtension)
             let data = try Data(contentsOf: url)
             let mime = type?.preferredMIMEType ?? "text/plain"
-            guard mime.hasPrefix("image/") || mime.hasPrefix("audio/") || mime.hasPrefix("video/") || mime.hasPrefix("text/") || mime == "application/pdf" || ["json", "js", "swift", "kt", "py", "md", "html", "svg"].contains(url.pathExtension.lowercased()) else { throw AppError.message("Formato não suportado. Exporte o documento para PDF ou texto.") }
+            guard mime.hasPrefix("image/") || mime.hasPrefix("audio/") || mime.hasPrefix("video/") || mime.hasPrefix("text/") || mime == "application/pdf" || ["json", "js", "swift", "kt", "py", "md", "html", "svg", "ts", "tsx", "jsx", "css", "yaml", "yml", "xml", "csv", "sql", "zip", "jar", "apk", "docx", "xlsx", "pptx", "odt", "ods", "odp"].contains(url.pathExtension.lowercased()) else { throw AppError.message("Formato não suportado. Exporte o documento para PDF ou texto.") }
             attachments.append(Attachment(name: url.lastPathComponent, mime: mime, data: data))
         } catch { report(error.localizedDescription) }
     }

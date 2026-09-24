@@ -8,11 +8,11 @@ Fonte: snapshot registrado em android-source.json. “Implementado” descreve c
 | Logo e tema | Mesmo PNG do orbe, tema persistente | Implementado |
 | Gemini/Groq/OpenRouter streaming | URLSession SSE, contexto, tool loop | Implementado |
 | Fallback Gemini | Somente indisponibilidade/cota, antes de qualquer efeito | Implementado |
-| Catálogo Groq e Live | Consulta pela chave; paginação Gemini | Implementado; fallback automático Groq por 404 ainda não portado |
-| Raciocínio rápido/equilibrado/profundo | Configuração padrão do provedor | Seletor ainda não portado |
+| Catálogo Groq e Live | Consulta pela chave; paginação Gemini | Implementado, incluindo nova tentativa Groq após consultar catálogo em erro 404 |
+| Raciocínio rápido/equilibrado/profundo | thinkingLevel em Gemini 3.x / thinkingBudget em 2.5 | Implementado |
 | Gemini Live | WebSocket + AVAudioEngine | Implementado; testar latência/eco em aparelhos |
 | 30 vozes | Mesmos nomes; depende do modelo | Implementado |
-| TTS de respostas escritas Gemini | AVSpeechSynthesizer do iPhone | Adaptado; TTS Gemini ainda não portado |
+| TTS de respostas escritas Gemini | Gemini Flash/Flash-Lite TTS e opção de voz iPhone | Implementado |
 | Câmera frontal/traseira | AVCaptureSession | Implementado; câmera pausa em segundo plano |
 | Tela via MediaProjection | Extensão ReplayKit autorizada | Implementado; exige App Group e assinatura corretos |
 | Bolha sobre outros apps | Sem sobreposição arbitrária | Não disponível pelas APIs públicas usadas |
@@ -24,7 +24,7 @@ Fonte: snapshot registrado em android-source.json. “Implementado” descreve c
 | Intents telefone/mensagens/mapas | URL schemes / composição com confirmação | Implementado; envio não automático |
 | Agenda e contatos | EventKit / Contacts com permissão | Implementado |
 | Memória fora do app | Documentos do app + exportação/importação Arquivos/iCloud | Adaptado; desinstalação pode remover documentos |
-| Anexos até 50 MB + Office/ZIP | Inline Gemini até 15 MB por envio | Parcial; Office/ZIP e Files API ainda não portados |
+| Anexos até 50 MB + Office/ZIP | Inline/Files API até 50 MB por arquivo; extração Office e listagem ZIP limitadas | Implementado; até 100 MB de anexos por envio |
 | Editor e preview HTML/SVG | TextEditor + WKWebView isolado sem rede | Implementado |
 | Delegação de código | Escolha modelo de texto/voz, cancelamento | Implementado |
 | Rotinas IA em segundo plano | Aviso local + execução ao abrir | Adaptado; servidor seria necessário para garantia de execução sem abrir |

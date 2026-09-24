@@ -25,11 +25,13 @@ plist(IOS/'BroadcastExtension/Info.plist',{**common_info,'CFBundleDisplayName':'
 plist(IOS/'ShareExtension/Info.plist',{**common_info,'CFBundleDisplayName':'OSTIE','CFBundlePackageType':'XPC!','NSExtension':{'NSExtensionPointIdentifier':'com.apple.share-services','NSExtensionPrincipalClass':'$(PRODUCT_MODULE_NAME).ShareViewController','NSExtensionAttributes':{'NSExtensionActivationRule':{'NSExtensionActivationSupportsText':True,'NSExtensionActivationSupportsWebURLWithMaxCount':5,'NSExtensionActivationSupportsImageWithMaxCount':5,'NSExtensionActivationSupportsMovieWithMaxCount':5,'NSExtensionActivationSupportsFileWithMaxCount':5}}}})
 for folder in ['OSTIE','BroadcastExtension','ShareExtension']:
     plist(IOS/f'{folder}/{folder}.entitlements',{'com.apple.security.application-groups':['group.com.hrosone.ostie.ios']})
-plist(IOS/'OSTIE/PrivacyInfo.xcprivacy',{'NSPrivacyTracking':False,'NSPrivacyTrackingDomains':[],'NSPrivacyCollectedDataTypes':[],'NSPrivacyAccessedAPITypes':[{'NSPrivacyAccessedAPIType':'NSPrivacyAccessedAPICategoryFileTimestamp','NSPrivacyAccessedAPITypeReasons':['C617.1']}]})
+plist(IOS/'OSTIE/PrivacyInfo.xcprivacy',{'NSPrivacyTracking':False,'NSPrivacyTrackingDomains':[],'NSPrivacyCollectedDataTypes':[],'NSPrivacyAccessedAPITypes':[{'NSPrivacyAccessedAPIType':'NSPrivacyAccessedAPICategoryFileTimestamp','NSPrivacyAccessedAPITypeReasons':['C617.1']},{'NSPrivacyAccessedAPIType':'NSPrivacyAccessedAPICategorySystemBootTime','NSPrivacyAccessedAPITypeReasons':['35F9.1']}]})
 assets=IOS/'OSTIE/Assets.xcassets'
 (assets/'Contents.json').write_text(json.dumps({'info':{'author':'xcode','version':1}},indent=2)+'\n')
 (assets/'Orb.imageset/Contents.json').write_text(json.dumps({'images':[{'filename':'orb.png','idiom':'universal'}],'info':{'author':'xcode','version':1}},indent=2)+'\n')
 
+icon=assets/'AppIcon.appiconset';icon.mkdir(exist_ok=True)
+(icon/'Contents.json').write_text(json.dumps({'images':[{'filename':'AppIcon.png','idiom':'universal','platform':'ios','size':'1024x1024'}],'info':{'author':'xcode','version':1}},indent=2)+'\n')
 project_id=uid('project')
 products=[]; groups=[]; targets=[]
 configs_common={'SWIFT_VERSION':'5.0','IPHONEOS_DEPLOYMENT_TARGET':'17.0','SDKROOT':'iphoneos','TARGETED_DEVICE_FAMILY':'1,2','CLANG_ENABLE_MODULES':'YES','CLANG_ENABLE_OBJC_ARC':'YES','CODE_SIGN_STYLE':'Automatic','MARKETING_VERSION':'0.1.0','CURRENT_PROJECT_VERSION':'1','ENABLE_USER_SCRIPT_SANDBOXING':'YES','DEVELOPMENT_TEAM':''}
@@ -49,6 +51,7 @@ for name,folder,suffix,producttype in [('OSTIE','OSTIE','','application'),('OSTI
     groups.append(obj('group/'+name,'PBXGroup',children=refs,name=name,sourceTree='<group>'))
     phases=[obj('sources/'+name,'PBXSourcesBuildPhase',buildActionMask=2147483647,files=builds,runOnlyForDeploymentPostprocessing=0),obj('frameworks/'+name,'PBXFrameworksBuildPhase',buildActionMask=2147483647,files=[],runOnlyForDeploymentPostprocessing=0),obj('resources/'+name,'PBXResourcesBuildPhase',buildActionMask=2147483647,files=resources,runOnlyForDeploymentPostprocessing=0)]
     settings={**configs_common,'PRODUCT_NAME':'$(TARGET_NAME)','PRODUCT_BUNDLE_IDENTIFIER':'com.hrosone.ostie.ios'+suffix,'GENERATE_INFOPLIST_FILE':'YES' if istest else 'NO','SWIFT_EMIT_LOC_STRINGS':'YES','LD_RUNPATH_SEARCH_PATHS':['$(inherited)','@executable_path/Frameworks','@executable_path/../../Frameworks']}
+    if isapp: settings['ASSETCATALOG_COMPILER_APPICON_NAME']='AppIcon'
     if istest: settings.update({'TEST_HOST':'$(BUILT_PRODUCTS_DIR)/OSTIE.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OSTIE','BUNDLE_LOADER':'$(TEST_HOST)'})
     else: settings.update({'INFOPLIST_FILE':folder+'/Info.plist','CODE_SIGN_ENTITLEMENTS':folder+'/'+folder+'.entitlements'})
     if not isapp and not istest: settings.update({'APPLICATION_EXTENSION_API_ONLY':'YES','SKIP_INSTALL':'YES'})
@@ -60,6 +63,7 @@ for name,folder,suffix,producttype in [('OSTIE','OSTIE','','application'),('OSTI
     configlist=obj('configs/'+name,'XCConfigurationList',buildConfigurations=configs,defaultConfigurationIsVisible=0,defaultConfigurationName='Release')
     targets.append(obj('target/'+name,'PBXNativeTarget',buildConfigurationList=configlist,buildPhases=phases,buildRules=[],dependencies=[],name=name,productName=name,productReference=product,productType='com.apple.product-type.'+producttype))
 app=objects[uid('target/OSTIE')]
+app['buildPhases'].insert(0,obj('icon-script','PBXShellScriptBuildPhase',buildActionMask=2147483647,files=[],inputPaths=['$(SRCROOT)/../scripts/prepare_assets.swift','$(SRCROOT)/OSTIE/Assets.xcassets/Orb.imageset/orb.png'],outputPaths=['$(SRCROOT)/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png'],runOnlyForDeploymentPostprocessing=0,name='Prepare original OSTIE app icon',shellPath='/bin/sh',shellScript='set -e\nxcrun swift -module-cache-path "$DERIVED_FILE_DIR/SwiftModuleCache" "$SRCROOT/../scripts/prepare_assets.swift" "$SRCROOT/OSTIE/Assets.xcassets/Orb.imageset/orb.png" "$SRCROOT/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png"\n'))
 embed=[]
 for name in ['OSTIEBroadcast','OSTIEShare','OSTIETests']:
     proxy=obj('proxy/'+name,'PBXContainerItemProxy',containerPortal=project_id,proxyType=1,remoteGlobalIDString=uid('target/OSTIE') if name=='OSTIETests' else uid('target/'+name),remoteInfo='OSTIE' if name=='OSTIETests' else name)

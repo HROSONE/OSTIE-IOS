@@ -8,15 +8,26 @@ final class TextClient {
                 run: ToolRunner? = nil, onText: @escaping (String) -> Void) async throws -> String {
         let provider: Provider = attachments.isEmpty ? settings.provider : .gemini
         let selected = attachments.isEmpty ? settings.model : "gemini-2.5-flash"
-        let candidates = ModelCatalog.candidates(selected, defaults: provider == .gemini ? ModelCatalog.text : [], fallback: settings.fallback)
-        for (index, model) in candidates.enumerated() {
+        var candidates = ModelCatalog.candidates(selected, defaults: provider == .gemini ? ModelCatalog.text : [], fallback: settings.fallback)
+        let service = AttachmentService()
+        let prepared = try await service.prepare(attachments, key: key)
+        defer { Task { await service.remove(prepared.remoteNames, key: key) } }
+        var index = 0
+        var groqRetried = false
+        while index < candidates.count {
+            let model = candidates[index]
             var emitted = false
             do {
                 return try await stream(provider: provider, model: model, key: key, messages: messages, system: system,
-                    attachments: attachments, declarations: declarations, run: run, grounded: false) { delta in emitted = true; onText(delta) }
+                    parts: prepared.parts, declarations: declarations, run: run, grounded: false, thinking: settings.thinking) { delta in emitted = true; onText(delta) }
             } catch let error as AppError {
                 // Never replay an action or duplicate a partially delivered response.
+                if !emitted, provider == .groq, case .http(404) = error, !groqRetried, settings.fallback {
+                    groqRetried = true
+                    if let replacement = try await models(provider: .groq, key: key).first(where: { $0 != selected && !$0.contains("whisper") && !$0.contains("tts") }) { candidates.append(replacement) }
+                }
                 if emitted || !error.allowsFallback || index == candidates.count - 1 { throw error }
+                index += 1
             }
         }
         throw AppError.message("Nenhum modelo respondeu.")
@@ -24,18 +35,17 @@ final class TextClient {
     func search(query: String, settings: Settings, key: String) async throws -> String {
         try await stream(provider: .gemini, model: settings.geminiModel, key: key,
             messages: [Message(role: "user", text: query)], system: "Pesquise informações atuais. Responda em português com fatos e fontes.",
-            attachments: [], declarations: [], run: nil, grounded: true, onText: { _ in })
+            parts: [], declarations: [], run: nil, grounded: true, thinking: "low", onText: { _ in })
     }
     private func stream(provider: Provider, model: String, key: String, messages: [Message], system: String,
-                        attachments: [Attachment], declarations: [[String: Any]], run: ToolRunner?,
-                        grounded: Bool, onText: @escaping (String) -> Void) async throws -> String {
+                        parts: [[String: Any]], declarations: [[String: Any]], run: ToolRunner?,
+                        grounded: Bool, thinking: String, onText: @escaping (String) -> Void) async throws -> String {
         guard !key.isEmpty else { throw AppError.message("Salve a chave de \(provider.rawValue) nos Ajustes.") }
         var contents: [[String: Any]] = messages.suffix(12).map {
             if provider == .gemini { return ["role": $0.role == "assistant" ? "model" : "user", "parts": [["text": $0.text]]] }
             return ["role": $0.role, "content": $0.text]
         }
-        if provider == .gemini, !attachments.isEmpty {
-            let parts: [[String: Any]] = attachments.map { ["inlineData": ["mimeType": $0.mime, "data": $0.data.base64EncodedString()]] }
+        if provider == .gemini, !parts.isEmpty {
             if let last = contents.indices.last {
                 contents[last]["parts"] = (contents[last]["parts"] as? [[String: Any]] ?? []) + parts
             }
@@ -50,6 +60,8 @@ final class TextClient {
                 request = URLRequest(url: URL(string: "https://generativelanguage.googleapis.com/v1beta/models/\(safeModel):streamGenerateContent?alt=sse")!)
                 request.setValue(key, forHTTPHeaderField: "x-goog-api-key")
                 body = ["contents": contents, "systemInstruction": ["parts": [["text": system]]]]
+                if model.hasPrefix("gemini-3") { body["generationConfig"] = ["thinkingConfig": ["thinkingLevel": thinking]] }
+                else if model.hasPrefix("gemini-2.5") { body["generationConfig"] = ["thinkingConfig": ["thinkingBudget": thinking == "high" ? 8192 : thinking == "medium" ? 2048 : 0]] }
                 if grounded { body["tools"] = [["googleSearch": [:]]] }
                 else if !declarations.isEmpty { body["tools"] = [["functionDeclarations": declarations]] }
             } else {
