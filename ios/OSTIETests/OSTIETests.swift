@@ -36,6 +36,12 @@ final class OSTIETests: XCTestCase {
         XCTAssertThrowsError(try store.read("chat.json", as: [Message].self))
         XCTAssertEqual(try store.text("chat.json"), "{broken")
     }
+    func testOfficeTextAndZipListing() throws {
+        let data = Data(base64Encoded: "UEsDBBQAAAAIAHqDOF1emH2SQAAAAE4AAAARAAAAd29yZC9kb2N1bWVudC54bWyzKbdKyU8uzU3NK1GoyM3JK7Yqt1UqLcqzKkktLlGysym3KgARJXb+OYcX6ij4B4d4uira6INEQGQBmISZYAcAUEsBAhQDFAAAAAgAeoM4XV6YfZJAAAAATgAAABEAAAAAAAAAAAAAAIABAAAAAHdvcmQvZG9jdW1lbnQueG1sUEsFBgAAAAABAAEAPwAAAG8AAAAAAA==")!
+        XCTAssertTrue(try ArchiveReader.describe(data, office: true).contains("Olá, OSTIE!"))
+        XCTAssertTrue(try ArchiveReader.describe(data, office: false).contains("word/document.xml"))
+        XCTAssertThrowsError(try ArchiveReader.extract(ArchiveReader.list(data)[0], data: data, limit: 1))
+    }
     func testArchiveRejectsTruncatedAndRandomInput() {
         XCTAssertThrowsError(try ArchiveReader.list(Data()))
         XCTAssertThrowsError(try ArchiveReader.list(Data(repeating: 0, count: 80)))

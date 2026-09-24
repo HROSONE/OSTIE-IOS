@@ -682,7 +682,7 @@
 			"runOnlyForDeploymentPostprocessing" = 0;
 			"name" = "Prepare original OSTIE app icon";
 			"shellPath" = "/bin/sh";
-			"shellScript" = "set -e\nxcrun swift -module-cache-path \"$DERIVED_FILE_DIR/SwiftModuleCache\" \"$SRCROOT/../scripts/prepare_assets.swift\" \"$SRCROOT/OSTIE/Assets.xcassets/Orb.imageset/orb.png\" \"$SRCROOT/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png\"\n";
+			"shellScript" = "set -e\nxcrun --sdk macosx swift -sdk \"$(xcrun --sdk macosx --show-sdk-path)\" -module-cache-path \"$DERIVED_FILE_DIR/SwiftModuleCache\" \"$SRCROOT/../scripts/prepare_assets.swift\" \"$SRCROOT/OSTIE/Assets.xcassets/Orb.imageset/orb.png\" \"$SRCROOT/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png\"\n";
 		};
 		"29172B3089115ACB98992FEF" = {
 			"isa" = "PBXContainerItemProxy";
@@ -802,9 +802,9 @@
 			};
 			"buildConfigurationList" = "614471660AA131A99883C67C";
 			"compatibilityVersion" = "Xcode 14.0";
-			"developmentRegion" = "pt_BR";
+			"developmentRegion" = "pt-BR";
 			"hasScannedForEncodings" = 0;
-			"knownRegions" = ("en", "pt_BR", "Base");
+			"knownRegions" = ("en", "pt-BR", "Base");
 			"mainGroup" = "B28B7AF69320201D1CF206EB";
 			"productRefGroup" = "FBDC4F23F93125BBEEAE800C";
 			"projectDirPath" = "";

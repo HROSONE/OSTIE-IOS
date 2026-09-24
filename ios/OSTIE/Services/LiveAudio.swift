@@ -16,7 +16,7 @@ final class LiveAudio {
 
     func start() async throws {
         let granted = await withCheckedContinuation { continuation in
-            AVAudioSession.sharedInstance().requestRecordPermission { continuation.resume(returning: $0) }
+            AVAudioApplication.requestRecordPermission { continuation.resume(returning: $0) }
         }
         guard granted else { throw AppError.message("Permita o microfone nos Ajustes do iPhone.") }
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>pt_BR</string>
+	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
 	<string>OSTIE</string>
 	<key>CFBundleExecutable</key>
@@ -67,6 +67,8 @@
 	<array>
 		<string>arm64</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
