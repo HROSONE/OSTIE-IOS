@@ -2,21 +2,20 @@
 
 ## Evidência confirmada
 
-- A [execução 36053957320](https://github.com/HROSONE/OSTIE-IOS/actions/runs/36053957320), no commit `7c2d98b4db0ce84c7243737b60e96ba5fdaeffb0`, compilou o aplicativo e as duas extensões e passou nos cinco testes XCTest então existentes. Também publicou o aplicativo de simulador.
-- Esse resultado se aplica àquele commit. As melhorias posteriores em anexos, voz e preparo do ícone não estão cobertas por essa execução.
+- A [execução 36084734232](https://github.com/HROSONE/OSTIE-IOS/actions/runs/36084734232), no commit `c3ce63d97aa70d6fee659a3725cfa3417eb58f80`, concluiu a compilação do aplicativo e das duas extensões, passou em **oito testes XCTest sem falhas**, iniciou o OSTIE no simulador, capturou a tela e publicou o ZIP do app para simulador, o resultado de testes e o ícone. Esse commit inclui as melhorias de anexos, voz e preparo do ícone.
+- A alteração posterior no workflow apenas antecipa a publicação do ZIP e limita o tempo de espera para a captura de tela; não muda o código do aplicativo. A execução desse novo workflow pode ser vista na [página Actions](https://github.com/HROSONE/OSTIE-IOS/actions/workflows/ios.yml).
 - Os 77 arquivos em `android-reference/` podem ser conferidos contra os hashes do snapshot Android com `python3 scripts/verify_reference.py`.
 
-## Bloqueio atual
+## Como o bloqueio foi resolvido
 
-A [execução 36079700728](https://github.com/HROSONE/OSTIE-IOS/actions/runs/36079700728), no commit `28b9bb34ebdfa7aed94bbab8cec380f7a5f057c6`, não iniciou nenhuma etapa. O GitHub informa que pagamentos recentes falharam ou que o limite de gastos precisa ser aumentado e orienta consultar **Billing & plans**. A mensagem não permite distinguir qual das duas condições se aplica.
+A [execução 36079700728](https://github.com/HROSONE/OSTIE-IOS/actions/runs/36079700728), no commit `28b9bb34ebdfa7aed94bbab8cec380f7a5f057c6`, foi impedida de iniciar enquanto o repositório era privado. A mensagem do GitHub apontava falha de pagamento ou limite de gastos, sem distinguir a causa. Depois da autorização do proprietário para tornar o repositório público, uma nova tentativa iniciou no executor macOS e revelou uma falha no preparo do ícone; corrigimos a falha, e a execução 36084734232 passou. O executor padrão do GitHub Actions é gratuito e ilimitado para repositórios públicos.
 
-Esse commit moveu a geração do ícone para uma etapa anterior ao Xcode, para resolver as falhas de SDK e sandbox observadas nas tentativas anteriores. A correção está publicada, mas ainda não foi comprovada em uma nova compilação completa.
+O código, o histórico de commits e os logs do GitHub Actions agora estão visíveis publicamente. Não foram incluídas credenciais ou certificados no repositório; cada usuário informa suas chaves no aplicativo.
 
-## Retomar a validação
+## Repetir a validação
 
-1. O titular da conta deve verificar o aviso em Billing & plans e restabelecer a disponibilidade do GitHub Actions. Este projeto não altera cobrança, limites ou meios de pagamento.
-2. Após resolver o bloqueio, abrir **Actions → iOS build and tests → Run workflow**, na branch `main`.
-3. Conferir compilação, XCTest, captura do simulador e artefatos. Corrigir qualquer erro que essa execução revelar antes de considerar a versão atual validada.
+1. Abrir **Actions → iOS build and tests → Run workflow**, na branch `main`, ou publicar uma alteração nas pastas `ios/` ou `scripts/`.
+2. Conferir a compilação, os oito testes e o artefato **OSTIE-iOS-simulator**. A captura de tela é uma verificação adicional limitada por tempo; falhar nessa etapa não impede a publicação do ZIP se o build e os testes passarem.
 
 Também é possível compilar em um Mac com Xcode 16 ou posterior, seguindo o preparo do ícone e a abertura do projeto descritos no README. A compilação local não depende do limite do GitHub Actions.
 

@@ -39,7 +39,7 @@ A conversão de APIs Android para iOS não permite paridade integral de capacida
 
 ## Validação
 
-**Situação atual:** uma versão anterior passou na compilação e nos cinco testes de simulador. As alterações posteriores ainda precisam de uma execução completa: a tentativa mais recente foi impedida de iniciar pelo GitHub por cobrança ou limite de gastos da conta. Consulte [o registro de validação](docs/VALIDACAO.md) para os commits, resultados e próximos passos. A versão atual não deve ser considerada validada em iPhone real.
+**Situação atual:** o aplicativo e as duas extensões compilaram para iPhone; oito testes passaram e o app abriu no simulador. O repositório foi tornado público para usar o executor macOS padrão do GitHub Actions sem cobrança de minutos. Consulte [o registro de validação](docs/VALIDACAO.md) para a execução e os limites do teste. A versão atual ainda não foi validada em iPhone real.
 
 O workflow `iOS build and tests` verifica os hashes, regenera o projeto sem dependências externas, compila o aplicativo e suas extensões para iPhone e executa XCTest no simulador. Publica logs, resultado de testes e app de simulador. Não publica uma versão na App Store nem usa o repositório de releases Android.
 
