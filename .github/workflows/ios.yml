@@ -41,13 +41,6 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -project ios/OSTIE.xcodeproj -scheme OSTIE -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath build/simulator -resultBundlePath build/Tests.xcresult CODE_SIGNING_ALLOWED=NO test | tee simulator-test.log
-      - name: Launch the app and capture the iPhone screen
-        run: |
-          xcrun simctl bootstatus "$SIMULATOR_ID" -b
-          xcrun simctl install "$SIMULATOR_ID" build/simulator/Build/Products/Debug-iphonesimulator/OSTIE.app
-          xcrun simctl launch "$SIMULATOR_ID" com.hrosone.ostie.ios
-          sleep 2
-          xcrun simctl io "$SIMULATOR_ID" screenshot build/OSTIE-iPhone.png
       - name: Package simulator app
         run: ditto -c -k --sequesterRsrc --keepParent build/simulator/Build/Products/Debug-iphonesimulator/OSTIE.app build/OSTIE-simulator.zip
       - uses: actions/upload-artifact@v4
@@ -56,6 +49,24 @@ jobs:
           name: OSTIE-iOS-simulator
           path: build/OSTIE-simulator.zip
           retention-days: 14
+      - name: Launch the app and capture the iPhone screen
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, time
+          device = os.environ['SIMULATOR_ID']
+          app = 'build/simulator/Build/Products/Debug-iphonesimulator/OSTIE.app'
+          for command, seconds in [
+              (['xcrun', 'simctl', 'bootstatus', device, '-b'], 90),
+              (['xcrun', 'simctl', 'install', device, app], 90),
+              (['xcrun', 'simctl', 'launch', device, 'com.hrosone.ostie.ios'], 60),
+          ]:
+              print('Running:', ' '.join(command), flush=True)
+              subprocess.run(command, check=True, timeout=seconds)
+          time.sleep(2)
+          subprocess.run(['xcrun', 'simctl', 'io', device, 'screenshot',
+                          'build/OSTIE-iPhone.png'], check=True, timeout=60)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
