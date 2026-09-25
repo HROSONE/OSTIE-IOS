@@ -63,7 +63,6 @@ for name,folder,suffix,producttype in [('OSTIE','OSTIE','','application'),('OSTI
     configlist=obj('configs/'+name,'XCConfigurationList',buildConfigurations=configs,defaultConfigurationIsVisible=0,defaultConfigurationName='Release')
     targets.append(obj('target/'+name,'PBXNativeTarget',buildConfigurationList=configlist,buildPhases=phases,buildRules=[],dependencies=[],name=name,productName=name,productReference=product,productType='com.apple.product-type.'+producttype))
 app=objects[uid('target/OSTIE')]
-app['buildPhases'].insert(0,obj('icon-script','PBXShellScriptBuildPhase',buildActionMask=2147483647,files=[],inputPaths=['$(SRCROOT)/../scripts/prepare_assets.swift','$(SRCROOT)/OSTIE/Assets.xcassets/Orb.imageset/orb.png'],outputPaths=['$(SRCROOT)/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png','$(DERIVED_FILE_DIR)'],runOnlyForDeploymentPostprocessing=0,name='Prepare original OSTIE app icon',shellPath='/bin/sh',shellScript='set -e\nxcrun --sdk macosx swift -sdk "$(xcrun --sdk macosx --show-sdk-path)" -module-cache-path "$DERIVED_FILE_DIR/SwiftModuleCache" "$SRCROOT/../scripts/prepare_assets.swift" "$SRCROOT/OSTIE/Assets.xcassets/Orb.imageset/orb.png" "$SRCROOT/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png"\n'))
 embed=[]
 for name in ['OSTIEBroadcast','OSTIEShare','OSTIETests']:
     proxy=obj('proxy/'+name,'PBXContainerItemProxy',containerPortal=project_id,proxyType=1,remoteGlobalIDString=uid('target/OSTIE') if name=='OSTIETests' else uid('target/'+name),remoteInfo='OSTIE' if name=='OSTIETests' else name)

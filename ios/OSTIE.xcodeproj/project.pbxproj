@@ -301,7 +301,7 @@
 		"782073A1F1C3AF655F4D974E" = {
 			"isa" = "PBXNativeTarget";
 			"buildConfigurationList" = "E788D21D2E7CB721251B39A1";
-			"buildPhases" = ("7B5F81A0A33E195A729263B7", "2ED69F8CD2C5099A6D5910D5", "C1CCEAA070249E8F8AEE6AE1", "A34B5C98B3A89DCC5A81D233", "CFFF27C96089B93150F3553B");
+			"buildPhases" = ("2ED69F8CD2C5099A6D5910D5", "C1CCEAA070249E8F8AEE6AE1", "A34B5C98B3A89DCC5A81D233", "CFFF27C96089B93150F3553B");
 			"buildRules" = ();
 			"dependencies" = ("C0B9F9DEE7F4F0378E00FDF5", "8532C8333DB7862B74200FFD");
 			"name" = "OSTIE";
@@ -672,17 +672,6 @@
 			"productName" = "OSTIETests";
 			"productReference" = "7F0D25651E5A0D0A17649275";
 			"productType" = "com.apple.product-type.bundle.unit-test";
-		};
-		"7B5F81A0A33E195A729263B7" = {
-			"isa" = "PBXShellScriptBuildPhase";
-			"buildActionMask" = 2147483647;
-			"files" = ();
-			"inputPaths" = ("$(SRCROOT)/../scripts/prepare_assets.swift", "$(SRCROOT)/OSTIE/Assets.xcassets/Orb.imageset/orb.png");
-			"outputPaths" = ("$(SRCROOT)/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png", "$(DERIVED_FILE_DIR)");
-			"runOnlyForDeploymentPostprocessing" = 0;
-			"name" = "Prepare original OSTIE app icon";
-			"shellPath" = "/bin/sh";
-			"shellScript" = "set -e\nxcrun --sdk macosx swift -sdk \"$(xcrun --sdk macosx --show-sdk-path)\" -module-cache-path \"$DERIVED_FILE_DIR/SwiftModuleCache\" \"$SRCROOT/../scripts/prepare_assets.swift\" \"$SRCROOT/OSTIE/Assets.xcassets/Orb.imageset/orb.png\" \"$SRCROOT/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png\"\n";
 		};
 		"29172B3089115ACB98992FEF" = {
 			"isa" = "PBXContainerItemProxy";

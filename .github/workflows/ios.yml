@@ -22,6 +22,8 @@ jobs:
           python3 scripts/verify_reference.py
           python3 scripts/generate_project.py
           git diff --exit-code -- ios/OSTIE.xcodeproj ios/OSTIE/Info.plist ios/BroadcastExtension/Info.plist ios/ShareExtension/Info.plist
+      - name: Prepare installation icon from original artwork
+        run: xcrun --sdk macosx swift scripts/prepare_assets.swift ios/OSTIE/Assets.xcassets/Orb.imageset/orb.png ios/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png
       - name: Build iPhone app and extensions without distribution signing
         run: |
           set -o pipefail
@@ -63,4 +65,5 @@ jobs:
             simulator-test.log
             build/Tests.xcresult
             build/OSTIE-iPhone.png
+            ios/OSTIE/Assets.xcassets/AppIcon.appiconset/AppIcon.png
           retention-days: 7
