@@ -1,15 +1,28 @@
-import AppKit
+import CoreGraphics
+import Foundation
+import ImageIO
 
 // Build-time icon conversion preserves the Android artwork; no network or design changes.
 let arguments = CommandLine.arguments
-if arguments.count != 3 { fatalError("Usage: prepare_assets.swift source.png output.png") }
+guard arguments.count == 3 else { fatalError("Usage: prepare_assets.swift source.png output.png") }
 let source = URL(fileURLWithPath: arguments[1]), output = URL(fileURLWithPath: arguments[2])
-guard let image = NSImage(contentsOf: source), let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 1024, pixelsHigh: 1024, bitsPerSample: 8, samplesPerPixel: 3, hasAlpha: false, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0), let context = NSGraphicsContext(bitmapImageRep: bitmap) else { fatalError("Cannot read original orb") }
-NSGraphicsContext.saveGraphicsState(); NSGraphicsContext.current = context
-NSColor(calibratedRed: 0.015, green: 0.025, blue: 0.055, alpha: 1).setFill()
-NSBezierPath(rect: NSRect(x: 0, y: 0, width: 1024, height: 1024)).fill()
-image.draw(in: NSRect(x: 0, y: 0, width: 1024, height: 1024), from: .zero, operation: .sourceOver, fraction: 1)
-NSGraphicsContext.restoreGraphicsState()
-guard let png = bitmap.representation(using: .png, properties: [:]) else { fatalError("Cannot encode icon") }
+guard let input = CGImageSourceCreateWithURL(source as CFURL, nil),
+      let image = CGImageSourceCreateImageAtIndex(input, 0, nil) else {
+    fatalError("Cannot decode original orb at \(source.path)")
+}
+guard let context = CGContext(data: nil, width: 1024, height: 1024, bitsPerComponent: 8,
+                              bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(),
+                              bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+    fatalError("Cannot create icon drawing context")
+}
+let canvas = CGRect(x: 0, y: 0, width: 1024, height: 1024)
+context.setFillColor(red: 0.015, green: 0.025, blue: 0.055, alpha: 1)
+context.fill(canvas)
+context.draw(image, in: canvas)
+guard let icon = context.makeImage() else { fatalError("Cannot render icon") }
 try FileManager.default.createDirectory(at: output.deletingLastPathComponent(), withIntermediateDirectories: true)
-try png.write(to: output, options: .atomic)
+guard let destination = CGImageDestinationCreateWithURL(output as CFURL, "public.png" as CFString, 1, nil) else {
+    fatalError("Cannot create icon output at \(output.path)")
+}
+CGImageDestinationAddImage(destination, icon, nil)
+guard CGImageDestinationFinalize(destination) else { fatalError("Cannot write icon at \(output.path)") }
